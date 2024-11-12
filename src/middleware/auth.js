@@ -1,5 +1,6 @@
+//nota: investigar y comentar 
 const jwt = require('jsonwebtoken');
-const cadena = "123tamarindo";
+const cadena = "1234password";
 
 const validarToken = (req, res, next) => {
   const authHeader = req.headers.authorization;

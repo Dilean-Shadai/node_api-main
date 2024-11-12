@@ -20,4 +20,4 @@ NOTA: Posteriormente se agregarán en .env
 ## Contribuciones
 - Nataly
 - Ismael
-- Estudiantes de Ciencias Computacionales, generación 2024B
+- Estudiantes de Ciencias Computacionales, generación 2024B 

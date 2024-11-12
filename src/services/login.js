@@ -1,3 +1,4 @@
+//
 const {Router} = require('express');
 const { auth, logout } = require('../controllers/auth');
 

@@ -1,3 +1,4 @@
+//
 const bcrypt = require('bcryptjs');
 const conexion = require('../config/db');
 

@@ -11,6 +11,6 @@ app.use(cookieParser());
 app.use(morgan('dev'));
 
 app.use(require("./services/login"));
-app.use(require("./services/admin"));
+//app.use(require("./services/admin"));
 
 module.exports = app;
