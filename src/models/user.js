@@ -1,9 +1,9 @@
-// agregue lo que tiene Adri
+//
 const db = require('../config/db');
 
 //modelo agregar usuario de agenda medica
-const agregarUsuario = async (nombre_usuario,contrasena,email,rol) => {
-    const consulta = await db.query('INSERT INTO usuarios (nombre_usuario,contrasena,email,rol) VALUES (?,?,?,?);', [nombre_usuario,contrasena,email,rol]);
+const agregarUsuario = async (usuario,pass,email,rol) => {
+    const consulta = await db.query('INSERT INTO usuarios (usuario,pass,email,rol) VALUES (?,?,?,?);', [usuario,pass,email,rol]);
     if (consulta.affectedRows === 0) {
         throw new Error('No hay respuesta de la base de datos');
         return false;
@@ -41,9 +41,9 @@ const crearCita = async (id_paciente, fecha_cita, hora_cita, motivo) => {
 }
 
 
-const obtenerUsuarioPorNombre = async (nombre) => {
+const obtenerUsuarioPorNombre = async (usuario) => {
     try {
-        const [consulta] = await db.query('SELECT * FROM usuarios WHERE nombre = ?', [nombre]);
+        const [consulta] = await db.query('SELECT * FROM usuarios WHERE usuario = ?', [usuario]);
         if (!consulta || consulta.length === 0) {
             console.log("No hay duplicado de usuario.");
             return true;
@@ -57,15 +57,14 @@ const obtenerUsuarioPorNombre = async (nombre) => {
 };
 
 const obtenerListaUsuarios = async () => {
-    try{
-        const [lista] = await db.query('SELECT id, nombre, rol FROM usuarios');
-        return lista;
+    try {
+      const [usuarios] = await db.query('SELECT * FROM usuarios'); // MySQL devuelve un arreglo
+      return usuarios;  // Devuelve los usuarios directamente
     } catch (error) {
-        console.error("Error en la consulta a la base de datos:", error);
-        throw new Error('Error en la consulta a la base de datos');
+      console.error('Error al obtener usuarios:', error);
+      throw error;  // Lanza el error para ser manejado en el controlador
     }
-};
-
+  };
 module.exports = {validarUsuario, agregarUsuario, obtenerUsuarioPorNombre, obtenerListaUsuarios};
 
 

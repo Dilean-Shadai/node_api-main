@@ -1,65 +1,55 @@
-// agregue lo que tiene Adri 
+//
 const bcrypt = require('bcryptjs');
 const db = require('../config/db');
-const {agregarUsuario, obtenerUsuarioPorNombre, obtenerListaUsuarios} = require('../models/user');
+const { agregarUsuario, obtenerUsuarioPorNombre, obtenerListaUsuarios } = require('../models/user');
 
-
-//controlador agegar usuario
-const agregar = async (req, res) => {
-  const { nombre_usuario,contrasena,email,rol} = req.body;
-  try {
-    console.log(nombre_usuario,contrasena,email,rol);
-    const agregado = await agregarUsuario(nombre_usuario,contrasena,email,rol);
-    if (agregado==true){
-      res.status(201).json({ mensaje: 'Usuario creado exitosamente.'});
-    }
-  } catch (err) {
-    console.error('Error al agregar usuario:', err);
-    res.status(500).json({ error: 'Error al agregar el usuario.' });
-  }
-};
-
-
-// controlador registrar paciente
-const registrar = async (req, res) => {
-  const { nombre, apellido, email, telefono } = req.body;
-  try {
-    console.log(nombre, apellido, email, telefono);
-    const agregado = await registrarPaciente(nombre, apellido, email, telefono);
-    if (agregado==true){
-      res.status(201).json({ mensaje: 'Paciente registrado exitosamente.' });
-    }
-  } catch (err) {
-    console.error('Error al registrar paciente:', err); 
-    res.status(500).json({ error: 'Error al registrar al paciente.' });
-  }
-};
-
-// Controlador para crear una cita
-const crearCita = async (req, res) => {
-  const { id_paciente, fecha_cita, hora_cita, motivo } = req.body;
-  try {
-    console.log(id_paciente, fecha_cita, hora_cita, motivo);
-    const citaCreada = await crearCita(id_paciente, fecha_cita, hora_cita, motivo);
-    if (citaCreada==true){
-      res.status(201).json({ mensaje: 'Cita creada exitosamente.' });
-    }
-  } catch (err) {
-    console.error('Error al crear cita:', err);
-    res.status(500).json({ error: 'Error al crear la cita.' });
-  }
-};
-
-
-
+// Función para renderizar la vista de usuarios
 const view = async (req, res) => {
   try {
-    const lista = await obtenerListaUsuarios();
-    res.status(200).json(lista);
-} catch (error) {
+    const usuarios = await obtenerListaUsuarios(); // Obtener la lista de usuarios
+    res.render('usuarios', { usuarios }); // Pasar los usuarios a la vista usuarios.hbs
+  } catch (error) {
+    res.status(500).send('Error al obtener usuarios');
+  }
+};
+
+// Función para obtener los usuarios a través de la API (devuelve JSON)
+const obtenerUsuariosAPI = async (req, res) => {
+  try {
+    const usuarios = await obtenerListaUsuarios(); // Obtener la lista de usuarios
+    res.status(200).json(usuarios); // Devolver la lista en formato JSON
+  } catch (error) {
     console.error("Error al obtener usuarios:", error);
     res.status(500).json({ error: 'Error al obtener la lista de usuarios.' });
-}
-}
+  }
+};
 
-module.exports = { agregar, view};
+// Función para agregar un nuevo usuario
+const add = async (req, res) => {
+  const { nombre, email, password, rol, fecha_creacion } = req.body; // Obtener datos del cuerpo de la solicitud
+
+  try {
+    // Validar si el usuario ya existe
+    const usuarioExistente = await obtenerUsuarioPorNombre(nombre);
+    if (usuarioExistente) {
+      return res.status(400).json({ error: 'El nombre de usuario ya está registrado' });
+    }
+
+    // Encriptar la contraseña
+    const passwordEncriptado = await bcrypt.hash(password, 10);
+
+    // Agregar usuario a la base de datos
+    const resultado = await agregarUsuario(nombre, email, passwordEncriptado, rol, fecha_creacion);
+
+    if (resultado) {
+      res.status(201).json({ mensaje: 'Usuario agregado correctamente' });
+    } else {
+      res.status(500).json({ error: 'Error al agregar el usuario' });
+    }
+  } catch (error) {
+    console.error("Error al agregar usuario:", error);
+    res.status(500).json({ error: 'Error al agregar el usuario' });
+  }
+};
+
+module.exports = { view, obtenerUsuariosAPI, add }; 
