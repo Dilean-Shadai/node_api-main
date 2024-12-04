@@ -1,8 +1,8 @@
-# Nombre del Proyecto
+# Agenda citas medicas
 Ejemplo de API para la clase de Programación de servicios WEB
 
 ## Descripción
-Esta es una API de autenticación y gestión de usuarios que permite validar credenciales y generar tokens JWT para acceso seguro.
+Esta es una API de autenticación y gestión de usuarios (ver los usuarios registrados con acceso al sistema que tienen el rol de admin, asistente, medico) en una aplicación de agenda medica en la que se podra agendar citas y pacientes (en desarrollo)
 
 ## Instalación
 Instalar framework express y librerias:
@@ -15,9 +15,4 @@ Ejecutar con comando
 - Agregar credenciales de conexión a deb: db.js
 - Actualizar cadena en: auth.js
 
-NOTA: Posteriormente se agregarán en .env
-
-## Contribuciones
-- Nataly
-- Ismael
-- Estudiantes de Ciencias Computacionales, generación 2024B 
+## Clase: Programación de servicios web 2024-B
